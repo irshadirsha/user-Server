@@ -8,5 +8,7 @@ const userController = require ('../controller/userController')
 // }
 
 router.get('/',userController.Homes)
+router.post('/register',userController.Register)
+router.post('/login',userController.Logins)
 
 module.exports =router
