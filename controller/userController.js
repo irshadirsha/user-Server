@@ -16,7 +16,7 @@ const Register=async(req,res)=>{
         console.log("existemail",userExist);
         if (userExist) {
             console.log("User already exists with the email:", email);
-            return res.json({status:"user is alredy exist"});
+            return res.json({created:false,status:"user is alredy exist"});
         }else{
         console.log("inserted");
         const data= await userModel.create({name,email,phone,password})
@@ -37,17 +37,17 @@ const Logins=async(req,res)=>{
         const {email,password}=req.body
         console.log(email,password);
         const userExist=await userModel.findOne({email:email})
-        console.log(userExist);
         if(userExist){
+            console.log(userExist);
             if(userExist.password===password){
             const token = jwt.sign({sub:userExist._id,Role:userExist.Role},process.env.jwtSecretKey,{expiresIn:"3d"})
             console.log(token,"-------------");
             res.json({token,data:userExist,exist:true})
             }else{
-                return res.json({status:"passwors is not match"})
+                return res.json({exist:false,status:"Passwors is Not Match"})
             }
         }else{
-            res.json({status:"user not found"})
+            res.json({exist:false,status:"Email is Not Found"})
             console.log("user not found");
         }
     } catch (error) {
