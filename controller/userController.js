@@ -83,7 +83,6 @@ const AddImg=async (req,res)=>{
         const userId=req.userId
         console.log(userId);
         await userModel.updateOne({_id:userId},{$set:{image:url}})
-        // await userCollection.updateOne({_id:user},{$set:{image:imageUrl}})
         res.json({status:"image updated successfully"})
     } catch (error) {
         console.error("Error in user registration:", error);
