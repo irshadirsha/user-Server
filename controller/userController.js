@@ -56,11 +56,14 @@ const Logins=async(req,res)=>{
     }
 }
 
-const GetData=async(req,res,next)=>{
+const GetData=async(req,res)=>{
     try {
         const {email}=req.query
+        const userId=req.userId
+        console.log("from middleware -----",userId);
         console.log(email);
-        const data= await userModel.findOne({email:email})
+        // const data= await userModel.findOne({email:email})
+        const data= await userModel.findOne({_id:userId})
         if(data){
             console.log(data);
             res.json({data})
