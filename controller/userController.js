@@ -39,9 +39,13 @@ const Logins=async(req,res)=>{
         const userExist=await userModel.findOne({email:email})
         console.log(userExist);
         if(userExist){
+            if(userExist.password===password){
             const token = jwt.sign({sub:userExist._id,Role:userExist.Role},process.env.jwtSecretKey,{expiresIn:"3d"})
             console.log(token,"-------------");
-            res.json({token,userExist,exist:true})
+            res.json({token,data:userExist,exist:true})
+            }else{
+                return res.json({status:"passwors is not match"})
+            }
         }else{
             res.json({status:"user not found"})
             console.log("user not found");
@@ -51,4 +55,22 @@ const Logins=async(req,res)=>{
         res.status(500).json({ error: "Internal server error" });
     }
 }
-module.exports ={Homes,Register,Logins}
+
+const GetData=async(req,res,next)=>{
+    try {
+        const {email}=req.query
+        console.log(email);
+        const data= await userModel.findOne({email:email})
+        if(data){
+            console.log(data);
+            res.json({data})
+        }else{
+            return res.json({status:"data is not found"})
+        }
+    } catch (error) {
+        console.error("Error in user registration:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+}
+module.exports ={Homes,Register,Logins,GetData}
