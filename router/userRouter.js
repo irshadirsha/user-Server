@@ -11,4 +11,5 @@ router.get('/',userController.Homes)
 router.post('/register',userController.Register)
 router.post('/login',userController.Logins)
 router.get('/getdata',verifyToken,userController.GetData)
+router.post('/addimg',verifyToken,userController.AddImg)
 module.exports =router
