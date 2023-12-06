@@ -9,21 +9,14 @@ const Homes =async(req,res)=>{
 }
 const Register=async(req,res)=>{
     try {
-        console.log("cors connectedd");
         const {name,email,phone,password}=req.body
         console.log(name,email,phone,password);
         const userExist= await userModel.findOne({email:email})
-        console.log("existemail",userExist);
         if (userExist) {
-            console.log("User already exists with the email:", email);
             return res.json({created:false,status:"user is alredy exist"});
         }else{
-        console.log("inserted");
         const data= await userModel.create({name,email,phone,password})
-        console.log("its env filee-----",process.env.jwtSecretKey);
         const token = jwt.sign({sub: data._id,Role:data.Role},process.env.jwtSecretKey,{expiresIn: '3d'})
-        console.log(token);
-        console.log(data,"inserted");
         res.json({token,data, created: true})
         }
     } catch (error) {
@@ -33,15 +26,12 @@ const Register=async(req,res)=>{
 }
 const Logins=async(req,res)=>{
     try {
-        console.log("cors connected");
         const {email,password}=req.body
         console.log(email,password);
         const userExist=await userModel.findOne({email:email})
         if(userExist){
-            console.log(userExist);
             if(userExist.password===password){
             const token = jwt.sign({sub:userExist._id,Role:userExist.Role},process.env.jwtSecretKey,{expiresIn:"3d"})
-            console.log(token,"-------------");
             res.json({token,data:userExist,exist:true})
             }else{
                 return res.json({exist:false,status:"Passwors is Not Match"})
@@ -60,7 +50,6 @@ const GetData=async(req,res)=>{
     try {
         const {email}=req.query
         const userId=req.userId
-        console.log("from middleware -----",userId);
         console.log(email);
         // const data= await userModel.findOne({email:email})
         const data= await userModel.findOne({_id:userId})
@@ -79,9 +68,7 @@ const GetData=async(req,res)=>{
 const AddImg=async (req,res)=>{
     try {
         const {url}=req.body
-        console.log(url);
         const userId=req.userId
-        console.log(userId);
         await userModel.updateOne({_id:userId},{$set:{image:url}})
         res.json({status:"image updated successfully"})
     } catch (error) {

@@ -7,12 +7,13 @@ const port = process.env.PORT;
 const db= require ('./config/connection')
 db()
 const userRouter = require('./router/userRouter')
-app.use(express.json());
+app.options('*', cors());
 app.use(cors({
-    origin:process.env.Client_Side_URL,
-    methods: ["GET", "POST",'DELETE','PUT'],
-    credentials: true
-  }));
+  origin:process.env.Client_Side_URL,
+  methods: "*",
+  credentials: true
+}));
+app.use(express.json());
 app.use('/',userRouter)
 
   
