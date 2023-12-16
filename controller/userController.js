@@ -81,10 +81,10 @@ const AddChat=async(req,res)=>{
     try {
         const {message,reciverId}=req.body
         const userId=req.userId
-        console.log("message",message);
-        console.log("addchat id",userId);
-        console.log("reciver  id",reciverId);
-        console.log("message reached");
+        // console.log("message",message);
+        // console.log("addchat id",userId);
+        // console.log("reciver  id",reciverId);
+        // console.log("message reached");
         const data = await chatModel.create({ message:message,receiver:reciverId,sender:userId})
         console.log(data);
     } catch (error) {
@@ -94,7 +94,7 @@ const AddChat=async(req,res)=>{
 
 }
 const GetChat=async(req,res)=>{
-     console.log("api reached");
+    //  console.log("api reached");
      const userId=req.userId
      try {
         const data= await userModel.find({ _id: { $ne: userId } })
@@ -110,18 +110,24 @@ const ConnectChat=async(req,res)=>{
     console.log("api reached for name");
     const {UserID}=req.query
     const userId=req.userId
-    console.log(UserID);
+    console.log("1111",UserID);
+    console.log("2222",userId);
     const data=await userModel.findOne({_id:UserID})
-    // const res=await chatModel.find({$and[{reciver:UserID},{sender:userId}]})
+    // const result = await chatModel.find({
+    //     $and: [
+    //       { receiver: UserID },
+    //       { sender: userId }
+    //     ]
+    //   }).populate('sender').populate('receiver');
     const result = await chatModel.find({
-        $and: [
-          { receiver: UserID },
-          { sender: userId }
-        ]
-      });
+        $or: [
+            { sender: userId, receiver: UserID },
+            { sender: UserID, receiver: userId },
+        ],
+    }).populate('sender').populate('receiver');
       console.log("+++++++++",result);
     console.log("------------------",data);
-    res.json(data)
+    res.json({data,result})
 }
 
 // const GetChatMsg=async(req,res)=>{
